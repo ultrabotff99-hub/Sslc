@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TONIX | Premium Result Reveal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root { --pink: #ff85a2; --bg: #fffcfc; }
+        body { 
+            margin: 0; font-family: 'Montserrat', sans-serif; background: var(--bg); overflow-x: hidden; 
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSIlMjNmZjg1YTIiIGZpbGwtb3BhY2l0eT0iMC4wNyI+PHBhdGggZD0iTTMwIDE1YzAtOC4zIDIuNS0xMi4zIDEwLTEwIDEuNS0zLjUtMy0xMC0xMC0xMC05IDEuNS0xMC41IDMuOC0xMCAxMEMzNSA1IDE1IDYgMTUgMTBjMCAxMS4yIDUgMTYuNCAxMCAxNi40IDcgMCAxMC03LjIgMTAtMTUuNFoiLz48L2c+PC9zdmc+');
+        }
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(255,255,255,0.75); text-align: center; }
+        .photo-stack { position: relative; width: 240px; height: 320px; margin-bottom: 25px; }
+        .frame { position: absolute; width: 100%; height: 100%; background: white; padding: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-radius: 5px; transition: 0.8s; }
+        .f1 { transform: rotate(3deg); z-index: 2; }
+        .f2 { transform: rotate(-5deg); z-index: 1; top: 15px; left: -20px; opacity: 0.5; }
+        .frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+        .paper-card { width: 90%; max-width: 450px; background: #fff; padding: 30px; border: 1px solid #eee; margin: 40px auto; transform: scaleY(0); transform-origin: top; transition: 1.2s ease-in-out; box-shadow: 0 5px 20px rgba(0,0,0,0.02); }
+        .paper-card.active { transform: scaleY(1); }
+        .row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px dashed #eee; cursor: pointer; }
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.98); z-index:9999; justify-content:center; align-items:center; flex-direction:column; }
+        .shaking { font-size: 5rem; animation: shake 0.4s infinite; }
+        @keyframes shake { 0%{transform:rotate(0)} 50%{transform:rotate(10deg)} 100%{transform:rotate(0)} }
+        .gen-popup { display: none; position: fixed; top: 5%; left: 5%; width: 90%; height: 90%; background: white; z-index: 10000; border-radius: 20px; padding: 25px; box-shadow: 0 0 100px rgba(0,0,0,0.3); overflow-y: auto; }
+        .gen-btn { width: 100%; padding: 18px; background: var(--pink); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 1.1rem; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <div class="photo-stack">
+        <div class="frame f1"><img src="https://via.placeholder.com/240x320?text=Photo+1" id="p1"></div>
+        <div class="frame f2"><img src="https://via.placeholder.com/240x320?text=Photo+2" id="p2"></div>
+    </div>
+    <h1 style="font-family:'Dancing Script'; color:var(--pink); font-size:2.8rem; margin:0;" id="uName">Result Reveal</h1>
+    <p style="color:#888; font-weight:bold;">Scroll down to reveal results ↓</p>
+</div>
+
+<div class="paper-card" id="paper">
+    <h3 style="text-align:center; letter-spacing:2px; color:#555;">SSLC RESULT MEMO</h3>
+    <div id="rowContainer"></div>
+    <button onclick="document.getElementById('genPopup').style.display='block'" style="width:100%; margin-top:30px; padding:15px; border:none; background:#111; color:#fff; border-radius:10px; cursor:pointer; font-weight:bold; letter-spacing:1px;">CREATE YOUR OWN RESULT ✨</button>
+</div>
+
+<div class="modal" id="modal">
+    <div class="shaking" id="emo">⏳</div>
+    <h1 id="grade" style="font-size:6rem; color:var(--pink); display:none;">A+</h1>
+    <p id="msg" style="font-weight:bold; color:#666;">Verifying Grade...</p>
+</div>
+
+<div class="gen-popup" id="genPopup">
+    <h2 style="color:var(--pink); font-family:'Dancing Script'; text-align:center; font-size:2.5rem; margin-bottom:20px;">Result Studio</h2>
+    <label>Candidate Name:</label>
+    <input type="text" id="inN" placeholder="Enter Name">
+    <label>Main Photo URL (Image Direct Link):</label>
+    <input type="text" id="inP1" placeholder="Paste Image URL">
+    <label>Sister's Photo URL (Image Direct Link):</label>
+    <input type="text" id="inP2" placeholder="Paste Image URL">
+    
+    <p style="font-weight:bold; margin-top:15px;">Set Subject Grades:</p>
+    <div id="gradeInputs"></div>
+    <button class="gen-btn" onclick="makeLink()">GENERATE & COPY LINK 🔗</button>
+    <center><button onclick="document.getElementById('genPopup').style.display='none'" style="background:none; border:none; color:grey; margin-top:15px; cursor:pointer;">Close</button></center>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+    const subjects = ["Language I", "Language II", "English", "Hindi", "Social Science", "Physics", "Chemistry", "Biology", "Maths", "IT"];
+    const params = new URLSearchParams(window.location.search);
+    
+    // 1. LOAD SHARED DATA FROM URL
+    document.getElementById('uName').innerText = params.get('n') ? params.get('n') + "'s Result" : "Result Reveal";
+    if(params.get('p1')) document.getElementById('p1').src = params.get('p1');
+    if(params.get('p2')) document.getElementById('p2').src = params.get('p2');
+
+    const container = document.getElementById('rowContainer');
+    subjects.forEach((s, i) => {
+        const grd = params.get('s' + i) || "A+";
+        const div = document.createElement('div');
+        div.className = 'row';
+        div.innerHTML = `<span>${s}</span><span style="color:var(--pink); font-weight:bold;">REVEAL ></span>`;
+        div.onclick = () => revealGrade(s, grd);
+        container.appendChild(div);
+    });
+
+    // 2. BUILD GENERATOR
+    const gIn = document.getElementById('gradeInputs');
+    subjects.forEach((s, i) => {
+        gIn.innerHTML += `<div style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+            <label style="font-size:0.8rem;">${s}:</label>
+            <select id="sel${i}" style="width:70px; margin:0;"><option>A+</option><option>A</option><option>B+</option><option>B</option><option>C+</option><option>C</option><option>D+</option><option>D</option><option>E</option></select>
+        </div>`;
+    });
+
+    window.onscroll = () => { if(window.scrollY > 150) document.getElementById('paper').classList.add('active'); };
+
+    function revealGrade(s, g) {
+        const m = document.getElementById('modal');
+        m.style.display = 'flex';
+        document.getElementById('grade').style.display = 'none';
+        
+        let emos = ["😱","😫","😱","😵","😭"]; // Tension emojis
+        let c = 0;
+        let itv = setInterval(() => {
+            document.getElementById('emo').innerText = emos[Math.floor(Math.random()*emos.length)];
+            if(++c > 15) {
+                clearInterval(itv);
+                document.getElementById('grade').innerText = g;
+                document.getElementById('grade').style.display = 'block';
+                document.getElementById('emo').innerText = "✨";
+                confetti();
+                setTimeout(() => m.style.display = 'none', 1800);
+            }
+        }, 100);
+    }
+
+    // 3. THE LINK GENERATOR (FIXED FOR GITHUB)
+    function makeLink() {
+        const n = document.getElementById('inN').value || "Candidate";
+        const p1 = document.getElementById('inP1').value || "";
+        const p2 = document.getElementById('inP2').value || "";
+        
+        let query = `?n=${encodeURIComponent(n)}&p1=${encodeURIComponent(p1)}&p2=${encodeURIComponent(p2)}`;
+        for(let i=0; i<10; i++) {
+            query += `&s${i}=${document.getElementById('sel'+i).value}`;
+        }
+        
+        // This gets the exact GitHub URL automatically
+        const finalUrl = window.location.origin + window.location.pathname + query;
+        
+        navigator.clipboard.writeText(finalUrl).then(() => {
+            alert("Success! Link Copied to Clipboard.");
+            window.open(`https://wa.me/?text=Check out this special SSLC Result Reveal for ${n}! ❤️%0A%0A${encodeURIComponent(finalUrl)}`);
+        }).catch(err => {
+            alert("Copy failed, but link is ready!");
+            console.log(finalUrl);
+        });
+    }
+</script>
+</body>
+</html>

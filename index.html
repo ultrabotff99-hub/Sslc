@@ -9,40 +9,64 @@
         :root { --pink: #ff85a2; --bg: #fffcfc; }
         body { margin: 0; font-family: 'Playfair Display', serif; background: var(--bg); overflow-x: hidden; display: flex; flex-direction: column; align-items: center; min-height: 200vh; }
 
-        /* Flower Animation */
+        /* Flower Petals (ബാക്ക്ഗ്രൗണ്ട് പൂക്കൾ) */
         .flower { position: fixed; top: -50px; z-index: 1000; pointer-events: none; width: 20px; height: 25px; background: #ffb7c5; border-radius: 80% 10% 80% 10%; animation: fall linear infinite; }
         @keyframes fall { 0% { transform: translateY(-50px) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
 
         .top-header { margin-top: 50px; font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--pink); letter-spacing: 5px; text-align: center; }
         
-        /* Photo Stack & Sharpness */
+        /* Photo Stack & Pure Original Look */
         .photo-stack { position: relative; width: 240px; height: 320px; z-index: 10; margin: 20px 0; }
         .frame { position: absolute; width: 100%; height: 100%; background: white; padding: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-radius: 12px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); cursor: zoom-in; }
         .f1 { transform: rotate(3deg); z-index: 5; }
         .f2 { transform: rotate(-6deg); z-index: 4; top: 15px; left: -20px; opacity: 0.8; }
-        .frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; background: #eee; image-rendering: -webkit-optimize-contrast; filter: brightness(1.05); }
+        
+        /* No Filters: ഒറിജിനൽ ലുക്ക് (Blur & Filter removed) */
+        .frame img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            border-radius: 8px; 
+            filter: none; /* എല്ലാ ഫിൽട്ടറുകളും മാറ്റി */
+            image-rendering: auto; /* ക്ലാരിറ്റി കൂടാതിരിക്കാൻ */
+        }
 
-        /* Full View Zoom */
-        .frame.zoom { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(0deg) scale(1.3); width: 85vw; height: auto; z-index: 60000; cursor: zoom-out; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
-        .overlay-dim { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 55000; backdrop-filter: blur(8px); }
+        /* Pure Zoom with clear background (Blur overlay removed) */
+        .overlay-dim { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(255, 252, 252, 0.3); /* കുറച്ചു പിങ്ക് ലുക്ക് മാത്രം */
+            z-index: 55000; 
+            /* Blur പൂർണ്ണമായി മാറ്റി */
+        }
 
+        /* Centered Zoom */
+        .frame.zoom { 
+            position: fixed; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%) rotate(0deg) scale(1.3); 
+            width: 90vw; max-width: 480px; height: auto; 
+            z-index: 60000; cursor: zoom-out; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .frame.zoom img { object-fit: contain; }
+
+        /* Tension Modal & Grades */
         .tension-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 30000; flex-direction: column; justify-content: center; align-items: center; }
         .tension-emoji { font-size: 7rem; }
         .big-grade { font-size: 9rem; font-family: 'Cinzel'; color: var(--pink); display: none; font-weight: 900; }
 
-        .paper-roll { background: #fff; width: 90%; max-width: 450px; padding: 0 30px; box-shadow: 0 50px 100px rgba(0,0,0,0.05); max-height: 0; overflow: hidden; transition: max-height 2.5s ease; border-bottom: 15px solid var(--pink); border-radius: 0 0 30px 30px; margin-bottom: 50px; }
+        /* Paper Memo & Subjects */
+        .paper-roll { background: #fff; width: 90%; max-width: 450px; padding: 0 30px; box-shadow: 0 50px 100px rgba(0,0,0,0.05); max-height: 0; overflow: hidden; transition: max-height 2s ease; border-bottom: 15px solid var(--pink); border-radius: 0 0 30px 30px; margin-bottom: 50px; }
         .paper-roll.active { max-height: 3000px; padding: 40px 30px; }
         .row { display: flex; justify-content: space-between; padding: 18px 0; border-bottom: 1px dashed #eee; font-weight: bold; }
 
-        /* Generator Popup */
+        /* Link Generator Popup */
         .gen-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 420px; background: white; z-index: 70000; border-radius: 25px; padding: 25px; box-shadow: 0 0 100px rgba(0,0,0,0.4); max-height: 85vh; overflow-y: auto; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
-        .upload-area { border: 2px dashed var(--pink); padding: 12px; margin: 10px 0; border-radius: 10px; text-align: center; color: var(--pink); cursor: pointer; }
-        
-        /* Share Section */
-        #shareSection { display: none; margin-top: 20px; text-align: center; padding: 15px; border: 1px solid #eee; border-radius: 15px; }
-        .share-icons { display: flex; justify-content: center; gap: 15px; margin-top: 10px; font-size: 24px; }
-        .share-icons a { text-decoration: none; cursor: pointer; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body onclick="startMusic()" onscroll="startMusic()">
@@ -58,11 +82,15 @@
 
 <div class="hero" style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <div class="photo-stack">
-        <div class="frame f1" id="frame1" onclick="zoomImg('frame1')"><img src="https://via.placeholder.com/300x400?text=Front" id="mainPhoto"></div>
-        <div class="frame f2" id="frame2" onclick="zoomImg('frame2')"><img src="https://via.placeholder.com/300x400?text=Back" id="backPhoto"></div>
+        <div class="frame f1" id="frame1" onclick="zoomImg('frame1')">
+            <img src="https://i.ibb.co/BKyf8wmD/IMG-20260513-WA0013.jpg">
+        </div>
+        <div class="frame f2" id="frame2" onclick="zoomImg('frame2')">
+            <img src="https://i.ibb.co/K1Vnm5B/IMG-20260513-WA0014.jpg">
+        </div>
     </div>
     <h1 id="displayName" style="font-family:'Dancing Script'; color:var(--pink); font-size:3rem; margin:10px 0;">Faris Tonix</h1>
-    <p style="color: #bbb; font-size: 13px;">Click photos to zoom ☝🏻• Scroll for Result👇🏻 </p>
+    <p style="color: #bbb; font-size: 13px;">Tap photos for pure view • Scroll for Memo</p>
 </div>
 
 <div class="tension-modal" id="tensionModal">
@@ -74,34 +102,17 @@
 </div>
 
 <div class="paper-roll" id="paper">
-    <h2 style="text-align:center; font-family:'Cinzel';">SSL RESULT MEMO 2026</h2>
+    <h2 style="text-align:center; font-family:'Cinzel';">OFFICIAL MEMO 2026</h2>
     <div id="resultBox"></div>
     <button class="btn" style="background:#111; color:#fff;" onclick="openGen()">CREATE YOUR CUSTOM LINK ✨</button>
 </div>
 
 <div class="gen-popup" id="genPopup">
     <h3 style="text-align:center; color:var(--pink);">Link Generator</h3>
-    <input type="text" id="inName" placeholder="Candidate Name" style="width:96%; padding:12px; margin-bottom:10px; border-radius: 8px; border:1px solid #ddd;">
-    
-    <div class="upload-area" onclick="document.getElementById('imgInp1').click()">📸 Front Photo</div>
-    <input type="file" id="imgInp1" hidden accept="image/*" onchange="loadFile(event, 'mainPhoto')">
-    
-    <div class="upload-area" onclick="document.getElementById('imgInp2').click()">🖼️ Back Photo</div>
-    <input type="file" id="imgInp2" hidden accept="image/*" onchange="loadFile(event, 'backPhoto')">
-
+    <input type="text" id="inName" placeholder="Candidate Name" style="width:94%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #ddd;">
     <div id="gradeInputs"></div>
-    
     <button class="btn" style="background:var(--pink); color:white;" onclick="generateLink()">GENERATE NEW LINK</button>
     <button class="btn" style="background:#eee;" onclick="document.getElementById('genPopup').style.display='none'">CLOSE</button>
-
-    <div id="shareSection">
-        <p style="font-size:12px; color:#666;">Copy your new link below:</p>
-        <input type="text" id="finalLink" readonly style="width:90%; padding:8px; border:1px solid #ccc; border-radius:5px;">
-        <button class="btn" style="background:#444; color:white; padding:8px; margin-top:5px;" onclick="copyLink()">COPY LINK 📋</button>
-        
-        <div class="share-icons">
-            <a id="shareWA" target="_blank">🟢</a> <a id="shareFB" target="_blank">🔵</a> <a id="shareIN" onclick="alert('Link Copied! You can now paste it on Instagram.')">🟣</a> </div>
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -109,17 +120,17 @@
     const audio = document.getElementById('bgMusic');
     let musicStarted = false;
 
-    function startMusic() {
-        if (!musicStarted) {
-            audio.play().then(() => { musicStarted = true; }).catch(() => {});
-        }
-    }
+    function startMusic() { if (!musicStarted) { audio.play().then(() => { musicStarted = true; }).catch(() => {}); } }
 
     function zoomImg(id) {
         startMusic();
         const frame = document.getElementById(id);
         if(frame.classList.contains('zoom')) { closeZoom(); } 
-        else { closeZoom(); frame.classList.add('zoom'); document.getElementById('dimOverlay').style.display = 'block'; }
+        else { 
+            closeZoom(); 
+            frame.classList.add('zoom'); 
+            document.getElementById('dimOverlay').style.display = 'block'; 
+        }
     }
 
     function closeZoom() {
@@ -141,30 +152,14 @@
         subs.forEach((_, i) => { if(params.has('g'+i)) document.getElementById('sel'+i).value = params.get('g'+i); });
     }
 
-    function loadFile(event, target) {
-        const reader = new FileReader();
-        reader.onload = () => { document.getElementById(target).src = reader.result; };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-
     function generateLink() {
         const name = document.getElementById('inName').value || "Faris";
         let newUrl = window.location.origin + window.location.pathname + "?name=" + encodeURIComponent(name);
         subs.forEach((_, i) => { newUrl += `&g${i}=${encodeURIComponent(document.getElementById('sel'+i).value)}`; });
-        
-        document.getElementById('finalLink').value = newUrl;
-        document.getElementById('shareSection').style.display = 'block';
-        
-        // Share Links
-        document.getElementById('shareWA').href = `https://api.whatsapp.com/send?text=Check out my SSLC Result! ${encodeURIComponent(newUrl)}`;
-        document.getElementById('shareFB').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(newUrl)}`;
-    }
-
-    function copyLink() {
-        const copyText = document.getElementById("finalLink");
-        copyText.select();
-        document.execCommand("copy");
-        alert("Link Copied! Now share it with your friends.");
+        window.history.pushState({}, '', newUrl);
+        document.getElementById('displayName').innerText = name;
+        document.getElementById('genPopup').style.display = 'none';
+        alert("Link Updated!");
     }
 
     function reveal(i) {
@@ -203,4 +198,5 @@
     window.onscroll = () => { if(window.scrollY > 80) { document.getElementById('paper').classList.add('active'); startMusic(); } };
 </script>
 </body>
-</html>
+        </html>
+    
